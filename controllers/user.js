@@ -48,3 +48,34 @@ exports.userRegister = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.resetPass = async (req, res) => {
+  try {
+    let { currentPassword, newPassword, userId } = req.body;
+    let userExist = await User.findById(userId);
+    if (!userExist) {
+      return res.status(403).json({ message: STRINGS.ERRORS.UserNotExist });
+    }
+    let isCorrect = bcrypt.compareSync(currentPassword, userExist.password);
+    if (!isCorrect) {
+      return res.status(403).json({ message: STRINGS.ERRORS.PasswordInvalid });
+    }
+    let newhash = bcrypt.hashSync(newPassword, 10);
+    let user = await User.findOneAndUpdate(
+      {
+        _id: userId,
+      },
+      {
+        $set: {
+          password: newhash,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    return res.json({ message: STRINGS.TEXTS.UserUpdated, user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}

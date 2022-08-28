@@ -3,7 +3,7 @@ module.exports = {
     CustomerNotFound: "Customer Not Found",
     CustomerExists: "Customer Email Exists",
     UserExists: "User Email Exists",
-
+    UserNotExist: "User not Exists",
     ModelNotFound: "Model Not Found",
     UserNotFound: "User Not Found",
 
@@ -16,7 +16,7 @@ module.exports = {
   TEXTS: {
     CustomerCreated: "Customer Created Successfully",
     UserCreated: "User Created Successfully",
-
+    UserUpdated: "User Updated Successfully",
     CustomerUpdated: "Customer Updated Successfully",
     CustomerDeleted: "Customer Deleted Successfully",
     ModelCreated: "Model Created Successfully",

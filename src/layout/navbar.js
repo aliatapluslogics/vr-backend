@@ -1,11 +1,47 @@
 import Profile from "../img/undraw_profile.svg";
+import Modal from 'react-modal';
+import { useState } from "react";
+import axios from "axios"
+
 
 export default function NavBar() {
   let isAuthenticate = localStorage.getItem("user");
+  const [resetPassModalIsOpen, setResetPassModalIsOpen] = useState(false)
+  const [data, setData] = useState({})
   let user;
   if (isAuthenticate) {
     user = JSON.parse(isAuthenticate);
   }
+
+  const openCloseResetPassModal = () => {
+    setResetPassModalIsOpen(!resetPassModalIsOpen)
+  };
+
+  const onChange = async (e) => {
+    setData({ ...data, [e.target.name]: e.target.value })
+  }
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const { currentPassword, newPassword, confirmNewPassword } = data
+    const isConfirm = confirmNewPassword === newPassword
+    if(!isConfirm) {
+      alert("Confirm password does not match")
+      return;
+    }
+
+    try {
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}/users/resetPass`, {
+        currentPassword,
+        newPassword,
+        userId: user._id
+      });
+      alert(res.data.message);
+      openCloseResetPassModal()
+    } catch (error) {
+      alert(error.response.data.message);
+    }
+  };
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -40,7 +76,17 @@ export default function NavBar() {
             aria-labelledby="userDropdown"
           >
             <a
-              href="#"
+              href=""
+              className="dropdown-item"
+              onClick={openCloseResetPassModal}
+              data-toggle="modal"
+              data-target="#logoutModal"
+            >
+              <i className="fas fa-refresh fa-sm fa-fw mr-2 text-gray-400" />
+              Reset Password
+            </a>
+            <a
+              href="/"
               className="dropdown-item"
               onClick={() => {
                 localStorage.clear();
@@ -55,6 +101,57 @@ export default function NavBar() {
           </div>
         </li>
       </ul>
+      <Modal
+        isOpen={resetPassModalIsOpen}
+        onRequestClose={openCloseResetPassModal}
+      >
+        <div className="row justify-content-center">
+          <h1 className="h4 text-gray-900 mb-4">Reset Password</h1>
+        </div>
+        <div className="d-sm-flex flex-column align-items-c justify-content-between h-50 p-3 m-5">
+          <input
+            type="password"
+            required={true}
+            name="currentPassword"
+            onChange={onChange}
+            className="form-control form-control-user"
+            id="exampleInputFirstName"
+            placeholder="Current password"
+          />
+          <input
+            type="password"
+            required={true}
+            name="newPassword"
+            onChange={onChange}
+            className="form-control form-control-user"
+            id="exampleInputFirstName"
+            placeholder="New Password"
+          />
+          <input
+            type="password"
+            required={true}
+            name="confirmNewPassword"
+            onChange={onChange}
+            className="form-control form-control-user"
+            id="exampleInputFirstName"
+            placeholder="Confirm new password"
+          />
+        </div>
+        <div className="d-sm-flex flex-row justify-content-center">
+          <a
+            type="cancel"
+            value="cancel"
+            className="btn btn-lg btn-primary w-2 mr-3"
+            onClick={onSubmit}
+          >Submit</a>
+          <a
+            type="cancel"
+            value="cancel"
+            className="btn btn-lg btn-primary"
+            onClick={openCloseResetPassModal}
+          >Cancel</a>
+        </div>
+      </Modal>
     </nav>
   );
 }

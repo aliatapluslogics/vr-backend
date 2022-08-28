@@ -27,7 +27,7 @@ export default function SideBar() {
 
       {/* Nav Item - Charts */}
       <li className="nav-item ">
-        <a className="nav-link" href="#/">
+        <a className="nav-link" href="/">
           <i className="fas fa-fw fa-user" />
           <span>Customers</span>
         </a>
