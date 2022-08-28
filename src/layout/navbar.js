@@ -2,12 +2,14 @@ import Profile from "../img/undraw_profile.svg";
 import Modal from 'react-modal';
 import { useState } from "react";
 import axios from "axios"
+import { useNavigate } from 'react-router-dom'; 
 
 
 export default function NavBar() {
   let isAuthenticate = localStorage.getItem("user");
   const [resetPassModalIsOpen, setResetPassModalIsOpen] = useState(false)
   const [data, setData] = useState({})
+  let navigate = useNavigate ();
   let user;
   if (isAuthenticate) {
     user = JSON.parse(isAuthenticate);
@@ -86,11 +88,10 @@ export default function NavBar() {
               Reset Password
             </a>
             <a
-              href="/"
               className="dropdown-item"
               onClick={() => {
                 localStorage.clear();
-                window.location.reload();
+                window.location.replace("/")
               }}
               data-toggle="modal"
               data-target="#logoutModal"
