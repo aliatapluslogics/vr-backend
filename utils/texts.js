@@ -6,6 +6,7 @@ module.exports = {
     UserNotExist: "User not Exists",
     ModelNotFound: "Model Not Found",
     UserNotFound: "User Not Found",
+    DataNotExist: "Data Not Exist",
 
     ModelExists: "Model Email Exists",
 
@@ -18,6 +19,7 @@ module.exports = {
     UserCreated: "User Created Successfully",
     UserUpdated: "User Updated Successfully",
     CustomerUpdated: "Customer Updated Successfully",
+    HashCreated: "Hash created",
     CustomerDeleted: "Customer Deleted Successfully",
     ModelCreated: "Model Created Successfully",
 
@@ -28,6 +30,7 @@ module.exports = {
   MODALS: {
     CUSTOMER: "Customer",
     MODEL: "Model",
+    HASHQUERY: "HashQuery",
     USER: "User",
   },
 };

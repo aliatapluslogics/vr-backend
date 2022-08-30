@@ -1,6 +1,7 @@
 const STRINGS = require("../utils/texts");
 const Customer = require("../models/customer");
 const Model = require("../models/model");
+const HashQuery = require("../models/hashQuery")
 const fs = require("fs");
 const path = require("path");
 
@@ -196,6 +197,7 @@ exports.uploadModels = async (req, res) => {
       let urls = modelGroups[group].sort();
       let glb = urls.filter(v => v.includes('glb')).slice(-1).pop();
       let usdz = urls.filter(v => v.includes('usdz')).slice(-1).pop();
+      let identifier = (Math.random() + 1).toString(36).substring(6);
 
       let model = await Model.create({
         url: glb || "",
@@ -216,6 +218,11 @@ exports.uploadModels = async (req, res) => {
           new: true,
         }
       );
+      await HashQuery.create({
+        identifier: identifier,
+        modelId: model._id,
+        customerId: uniqueId
+      })
     }
 
     res.status(200).send({ message: "File Uploaded Successfully" });

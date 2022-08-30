@@ -3,8 +3,9 @@ import axios from "axios";
 
 export default function Viewer() {
     const [customers, setcustomers] = useState("");
-    const [models, setModels] = useState();
+    const [models, setModels] = useState([]);
     const [value, setValue] = useState(null)
+    const [hash, setHash] = useState("")
     useEffect(() => {
         getcustomers();
     }, []);
@@ -15,20 +16,50 @@ export default function Viewer() {
         setcustomers(res.data.customers);
     };
 
-    const handleModel = (e) => {
-        setValue({ ...value, modelId: e.target.value })
-        var iframe = document.getElementById('viewerFrame');
-        iframe.src = `${process.env.REACT_APP_VIEWER_URL}?customerId=${value.uniqueId}&modelId=${e.target.value}`;
+    const getIdentifier = async (customerId, modelId) => {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/query/get-hash`, {
+                customerId: customerId,
+                modelId: modelId
+            })
+            return res.data.identifier
+        } catch (err) {
+            console.log(err);
+            return null
+        }
+    }
 
+    const handleModel = async (e) => {
+        const modelId = e.target.value
+        setValue({ ...value, modelId })
+        var iframe = document.getElementById('viewerFrame');
+        const res = await getIdentifier(value.uniqueId, modelId);
+        setHash(res)
+        iframe.src = `${process.env.REACT_APP_VIEWER_URL}/?id=${hash}`;
     };
-    const getInitialState = (customer) => {
-        setModels(customer.models)
-        setValue({
-            uniqueId: customer.uniqueId || uniqueId,
-            modelId: customer.models[0]._id
-        })
+
+    const getInitialState = async (customer) => {
+        if (customer.uniqueId) {
+            if (customer.models.length) {
+                const res = await getIdentifier(customer.uniqueId, customer.models[0]._id);
+                setModels(customer.models)
+                setValue({
+                    uniqueId: customer.uniqueId || uniqueId,
+                    modelId: customer.models[0]._id
+                })
+                setHash(res)
+            } else{
+                setValue({
+                    uniqueId: customer.uniqueId || uniqueId,
+                    modelId: null
+                })
+
+            }
+        }
+        else alert("Data Not Availabe")
     };
-    const handleChange = (e) => {
+
+    const handleChange = async (e) => {
         const currentCustomer = customers.find((customer) => e.target.value === customer.uniqueId)
         const modelId = currentCustomer?.models[0] ? currentCustomer?.models[0]._id : null
         setValue({
@@ -36,8 +67,11 @@ export default function Viewer() {
             modelId
         })
         setModels(currentCustomer?.models)
+        const res = await getIdentifier(e.target.value, modelId);
         var iframe = document.getElementById('viewerFrame');
-        iframe.src = `${process.env.REACT_APP_VIEWER_URL}?customerId=${e.target.value}&modelId=${modelId}`;
+        setHash(res)
+        iframe.src = `${process.env.REACT_APP_VIEWER_URL}/?id=${hash}`;
+        console.log(`${process.env.REACT_APP_VIEWER_URL}/?id=${hash}`)
     };
 
     return (
@@ -50,7 +84,7 @@ export default function Viewer() {
                         )) : null
                     }
                 </select>
-                <div className="ml-1">{models && models.length > 0 ? <select value={value} onChange={handleModel}>
+                <div className="ml-1">{models && models.length > 0 ? <select value={value.modelId} onChange={handleModel}>
                     {
                         models.map((model, index) => (
                             <option key={index} value={model._id}>Model: {model._id}</option>
@@ -60,9 +94,9 @@ export default function Viewer() {
                 </div>
             </div>}
 
-            {value ? <iframe id="viewerFrame" src={`${process.env.REACT_APP_VIEWER_URL}?customerId=${value}`}>
+            {value ? <iframe id="viewerFrame" src={`${process.env.REACT_APP_VIEWER_URL}/?id=${hash}`}>
                 Your browser doesn't support iframes
-            </iframe>: <div>Loading...</div>}
+            </iframe> : <div>Loading...</div>}
         </div>
     );
 }
