@@ -41,6 +41,13 @@ export default function SideBar() {
         </a>
       </li>
 
+      <li className="nav-item ">
+        <a className="nav-link" href="#/admins">
+          <i className="fas fa-fw fa-user" />
+          <span>Manage Admins</span>
+        </a>
+      </li>
+
       {/* Divider */}
       <hr className="sidebar-divider d-none d-md-block" />
     </ul>

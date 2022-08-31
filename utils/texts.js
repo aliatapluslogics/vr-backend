@@ -22,6 +22,7 @@ module.exports = {
     HashCreated: "Hash created",
     CustomerDeleted: "Customer Deleted Successfully",
     ModelCreated: "Model Created Successfully",
+    UserDeletedSuccess: "Admin deleted successfully",
 
     ModelUpdated: "Model Updated Successfully",
     ModelDeleted: "Model Deleted Successfully",

@@ -10,7 +10,9 @@ import EditCustomer from './pages/editCustomer';
 import UploadModel from './pages/uploadModel';
 import ModelUrls from './pages/modelUrls';
 import Viewer from './pages/viewer';
+import ManageAdmins from './pages/manageAdmins'
 import CustomerSnippet from './pages/customerSnippet';
+import CreateAdmin from './pages/createAdmin';
 
 const UserContext = createContext(null);
 
@@ -27,22 +29,27 @@ function Spa() {
               }}
             >
               <div className="container-fluid fill-height" style={{ padding: "10px" }}>
-              <Routes>
-                <Route path="/" element={<Customer />} />
+                <Routes>
+                  <Route path="/" element={<Customer />} />
 
-                <Route
-                  path="/createCustomer"
-                  element={<CreateCustomer />}
-                />
-                <Route
-                  path="/editCustomer/:id"
-                  element={<EditCustomer />}
-                />
-                <Route path="/uploadModel/:id" element={<UploadModel />} />
-                <Route path="/modelUrls/:id" element={<ModelUrls />} />
-                <Route path="/viewer" element={<Viewer />} />
-                <Route path="/getSnippet/:id" element={<CustomerSnippet />} />
-              </Routes>
+                  <Route
+                    path="/createCustomer"
+                    element={<CreateCustomer />}
+                  />
+                  <Route
+                    path="/createAdmin"
+                    element={<CreateAdmin />}
+                  />
+                  <Route
+                    path="/editCustomer/:id"
+                    element={<EditCustomer />}
+                  />
+                  <Route path="/uploadModel/:id" element={<UploadModel />} />
+                  <Route path="/modelUrls/:id" element={<ModelUrls />} />
+                  <Route path="/viewer" element={<Viewer />} />
+                  <Route path="/admins" element={<ManageAdmins />} />
+                  <Route path="/getSnippet/:id" element={<CustomerSnippet />} />
+                </Routes>
               </div>
             </UserContext.Provider>
           </div>
@@ -52,7 +59,7 @@ function Spa() {
   } else {
     return (
       <HashRouter>
-        
+
         <div>
           <UserContext.Provider
             value={{
@@ -60,13 +67,13 @@ function Spa() {
             }}
           >
             <div className="container" style={{ padding: "20px" }}>
-            <Routes>
-              <Route path="/" element={<Login />} />
-            </Routes>
+              <Routes>
+                <Route path="/" element={<Login />} />
+              </Routes>
             </div>
           </UserContext.Provider>
         </div>
-        
+
       </HashRouter>
     );
   }

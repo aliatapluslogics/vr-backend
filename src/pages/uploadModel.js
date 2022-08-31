@@ -95,7 +95,7 @@ export default function UploadModel() {
           className="btn btn-primary btn-user btn-block"
         />
         {loading && <div className="row">
-          <Progressbar bgcolor="#ff00ff" progress={completed} height={18} />
+          <Progressbar bgcolor="#ff00ff" progress={Math.floor(completed)} height={18} />
         </div>}
       </form>
     </div>

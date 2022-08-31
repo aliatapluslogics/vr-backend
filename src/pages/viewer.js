@@ -87,7 +87,7 @@ export default function Viewer() {
                 <div className="ml-1">{models && models.length > 0 ? <select value={value.modelId} onChange={handleModel}>
                     {
                         models.map((model, index) => (
-                            <option key={index} value={model._id}>Model: {model._id}</option>
+                            <option key={index} value={model._id}>Model: {model.url ? model.url.split("/")[model.url.split("/").length - 1].split(".")[0] : "undefined"}</option>
                         ))
                     }
                 </select> : "No Model available"}

@@ -51,7 +51,8 @@ export default function CustomerSnippet() {
       res.data.map(async (model) => {
         return {
           id: model._id,
-          link: await getHashedLink(paramId, model._id)
+          link: await getHashedLink(paramId, model._id),
+          url: model.url
         }
       }
       ));
@@ -108,6 +109,8 @@ export default function CustomerSnippet() {
                 <th>Model Id</th>
                 <th>Short Embed Link</th>
                 <th>Full Embed Link</th>
+                <th>Model Name</th>
+
               </tr>
             </thead>
 
@@ -118,6 +121,7 @@ export default function CustomerSnippet() {
                     <td>{model.id}</td>
                     <td>{model.link}</td>
                     <td>{`${process.env.REACT_APP_VIEWER_URL}/?customerId=${paramId}&modelId=${model.id}`}</td>
+                    {model.url ? <td>{model.url.split("/")[model.url.split("/").length - 1].split(".")[0]}</td> : <td>-</td>}
                   </tr>
                 ))
                 : null}

@@ -79,3 +79,24 @@ exports.resetPass = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 }
+
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.json({ users });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params
+    const user = await User.findByIdAndDelete(id)
+    return res.json({ message: STRINGS.TEXTS.UserDeletedSuccess, user });
+  }
+  catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+
+}
